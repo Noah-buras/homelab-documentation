@@ -4,5 +4,7 @@ Wireless network access is provided by Ubiquiti U6+ Access Point, by connecting 
 
 # SSID Maps
 |SSID| Maps to VLAN| Subnet| Gateway| Purpose|
+|---|---|---|---|---|
  |HomeNet| VLAN 20(Trusted)|192.168.20.0/24| 192.168.20.1| Trusted wireless access| 
 |GuestNet| VLAN 60(Guest)| 192.168.60.0/24| 192.168.60.1| Isolated guest access|
+
