@@ -11,7 +11,7 @@ allowed traffic is permitted. Rules are configured in OPNsense.
 | Block IoT | VLAN 40 | Any VLAN | Any | Block | Isolate IoT devices |
 | Block Media | VLAN 30 | Any VLAN | Any | Block | Isolate Media devices |
 | Allow Internet Access| VLAN 60| WAN| Any| Allow|Guest internet access|
-|Block inter-VLAN Access| VLAN 60| Any VLAN| Any| Isolate guest network| 
+|Block inter-VLAN Access| VLAN 60| Any VLAN| Any| Block| Isolate guest network| 
 ## DNS Rules
 | VLAN | DNS Server | Notes |
 |---|---|---|
