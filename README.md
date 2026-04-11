@@ -16,7 +16,7 @@ Network+ and CCNA certifications.
 | Firewall/Router | Intel N100 Mini PC (4x 2.5GbE) |
 | Switch | Cisco SG300-28P |
 | NAS | UGREEN NASync DXP4800 Plus |
-
+|Acces Point| Ubiquiti U6+|
 ---
 
 ## Network Design
