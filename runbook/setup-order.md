@@ -20,18 +20,17 @@ This runbook documents the setup order for the homelab. Phases are designed to b
 - [x] Access OPNsense web UI (https://192.168.1.1)
 - [x] Change default root password
 - [x] Confirm interface assignments (ETH0=LAN/igc0, ETH1=WAN/igc1)
-- [ ] Connect Cox modem to WAN port (ETH1) — pending Cox installation
-- [ ] Verify WAN connectivity and internet access
-- [ ] Run through OPNsense setup wizard
+- [x] Connect Cox modem to WAN port (ETH1)
+- [x] Verify WAN connectivity and internet access
 ---
  
 ## Phase 3 — Basic Connectivity
-- [ ] Connect Cisco SG300 to OPNsense LAN (ETH0)
-- [ ] Connect PC, Xbox, and Ubiquiti U6+ to Cisco SG300
-- [ ] Adopt U6+ in UniFi Network app (iPhone)
-- [ ] Create basic SSID (no VLANs yet)
-- [ ] Verify all wired and wireless devices receive IP from OPNsense DHCP (192.168.1.x)
-- [ ] Verify internet access on all devices
+- [x] Connect Cisco SG300 to OPNsense LAN (ETH0)
+- [x] Connect PC, Xbox, and Ubiquiti U6+ to Cisco SG300
+- [x] Adopt U6+ in UniFi Network Application (PC) and UniFi app (iPhone)
+- [x] Create basic SSID (HomeNet — no VLANs yet)
+- [x] Verify wired devices receive IP from OPNsense DHCP (192.168.1.x)
+- [x] Verify internet access on all wired and wireless devices
 ---
  
 ## Phase 4 — VLAN Configuration
@@ -91,8 +90,8 @@ This runbook documents the setup order for the homelab. Phases are designed to b
 | Phase | Status |
 |---|---|
 | Phase 1 — Hardware Assembly | 🔧 In Progress |
-| Phase 2 — OPNsense Setup | 🔧 In Progress |
-| Phase 3 — Basic Connectivity | ⏳ Pending (Cox modem installation) |
+| Phase 2 — OPNsense Setup | ✅ Complete |
+| Phase 3 — Basic Connectivity | ✅ Complete |
 | Phase 4 — VLAN Configuration | 📋 Planned |
 | Phase 5 — Pi-hole | 📋 Planned |
 | Phase 6 — WireGuard | 📋 Planned |
