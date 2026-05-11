@@ -28,7 +28,7 @@ Network+ and CCNA certifications.
 ## Services
 | Service | Purpose | Status |
 |---|---|---|
-| OPNsense | Firewall / Router | Planned |
+| OPNsense | Firewall / Router | Up and Runnin|
 | Pi-hole | DNS / Ad blocking | Planned |
 | WireGuard | Remote VPN access | Planned |
 | Plex | Media server | Planned |
