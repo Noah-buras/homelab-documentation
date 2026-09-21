@@ -4,11 +4,7 @@ Home lab build documenting network setup, VLAN configuration, and self-hosted se
 ---
  
 ## Overview
-A home lab built around an Intel N100 mini PC running OPNsense,
-a Cisco SG300 managed switch, a Ubiquiti U6+ Wi-Fi 6 access point,
-and a Dell PowerEdge T340 server. Designed to develop hands-on
-networking skills and serve as a portfolio for Network+ and CCNA
-certifications.
+A home lab built around an Intel N100 mini PC running OPNsense, a Cisco SG300 managed switch, a Ubiquiti U6+ Wi-Fi 6 access point, and a Dell PowerEdge T340 server running Proxmox. Designed to develop hands-on networking and systems skills and serve as a portfolio for Network+ and CCNA certifications.
  
 ---
  
@@ -19,7 +15,7 @@ certifications.
 | Firewall/Router | CWWK CW-ADLN-4L Mini PC (Intel N100, 4x 2.5GbE) | ✅ Online |
 | Switch | Cisco SG300 (L2 mode) | ✅ Online |
 | Access Point | Ubiquiti U6+ (Wi-Fi 6) | ✅ Online |
-| Server/NAS | Dell PowerEdge T340 (8-bay) | 🔧 In Progress |
+| Main Server | Dell PowerEdge T340 (8-bay, Proxmox host) | 🔧 In Progress |
  
 ---
  
@@ -55,7 +51,7 @@ Cisco SG300 (L2 Switch)
 - **5 VLANs** — Management, Trusted, Media, IoT, Guest
 - **Subnet scheme** — `192.168.x.0/24` per VLAN
 - **Firewall** — OPNsense with inter-VLAN rules
-- **DNS** — Pi-hole in Docker on Dell PowerEdge T340 (192.168.20.11)
+- **DNS** —Pi-hole running as a Proxmox guest on the T340 (192.168.20.12)
 ### VLAN Table
  
 | VLAN ID | Name | Subnet | Gateway | DNS |
@@ -75,26 +71,29 @@ Cisco SG300 (L2 Switch)
 | Service | Host | Purpose | Status |
 |---|---|---|---|
 | OPNsense | CWWK Mini PC | Firewall / Router | ✅ Running |
-| Pi-hole | Dell PowerEdge T340 (Docker) | DNS / Ad blocking | 📋 Planned |
+| Proxmox VE | Dell PowerEdge T340 | Virtualization for lab VMs and services | 📋 Planned |
+| Pi-hole | Proxmox guest on the T340 | DNS / Ad blocking | 📋 Planned |
 | WireGuard | OPNsense | Remote VPN access | 📋 Planned |
-| Plex | Dell PowerEdge T340 | Media server | 📋 Planned |
-| Suricata | OPNsense | Intrusion detection | 📋 Planned |
- 
+| Lab VMs | Proxmox guests on the T340 | Hands-on labbing | 📋 Planned |
+| Plex | Proxmox guest on the T340 | Media server (after storage is added) | 📋 Future |
+| Suricata | OPNsense | Intrusion detection | 📋 Future |
 ---
  
 ## Build Progress
  
 | Phase | Description | Status |
 |---|---|---|
-| Phase 1 | Hardware Assembly | ✅ Complete |
+| Phase 1 | Hardware Assembly | 🔧 In Progress |
 | Phase 2 | OPNsense Setup | ✅ Complete |
 | Phase 3 | Basic Connectivity | ✅ Complete |
-| Phase 4 | VLAN Configuration | ✅ Complete |
-| Phase 5 | Pi-hole (DNS & Ad Blocking) | 📋 Planned |
+| Phase 4 | VLAN Configuration | 📋 Next Up |
+| Phase 5 | Proxmox & Pi-hole (DNS & Ad Blocking) | 📋 Planned |
 | Phase 6 | WireGuard (Remote VPN) | 📋 Planned |
-| Phase 7 | Plex & NAS Services | 📋 Planned |
-| Phase 8 | Suricata (IDS) | 📋 Future |
+| Phase 7 | Lab VMs | 📋 Planned |
+| Phase 8 | Plex & Media Storage | 📋 Future |
+| Phase 9 | Suricata (IDS) | 📋 Future |
  
+
 ---
  
 ## Diagrams
