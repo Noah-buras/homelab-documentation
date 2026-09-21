@@ -3,9 +3,9 @@
 ## VLAN Table
 | VLAN ID | Name | Subnet | Gateway | DNS |
 |---|---|---|---|---|
-| 10 | Management | 192.168.10.0/24 | 192.168.10.1 | Pi-hole (192.168.20.11) |
-| 20 | Trusted | 192.168.20.0/24 | 192.168.20.1 | Pi-hole (192.168.20.11) |
-| 30 | Media | 192.168.30.0/24 | 192.168.30.1 | Pi-hole (192.168.20.11) |
+| 10 | Management | 192.168.10.0/24 | 192.168.10.1 | Pi-hole (192.168.20.12) |
+| 20 | Trusted | 192.168.20.0/24 | 192.168.20.1 | Pi-hole (192.168.20.12) |
+| 30 | Media | 192.168.30.0/24 | 192.168.30.1 | Pi-hole (192.168.20.12) |
 | 40 | IoT | 192.168.40.0/24 | 192.168.40.1 | 1.1.1.1 (Direct) |
 | 60 | Guest | 192.168.60.0/24 | 192.168.60.1 | 1.1.1.1 (Direct) |
  
@@ -14,12 +14,13 @@
 |---|---|---|
 | OPNsense (Admin UI) | Management (10) | 192.168.10.1 |
 | Cisco SG300 | Management (10) | 192.168.10.2 |
-| Dell PowerEdge T340 | Trusted (20) | 192.168.20.11 |
+| Dell PowerEdge T340 (Proxmox host) | Trusted (20) | 192.168.20.11 |
+| Pi-hole (Proxmox guest) | Trusted (20) | 192.168.20.12 |
  
 ## Reserved for Future Use
 | Device | VLAN | IP Address | Status |
 |---|---|---|---|
-| UGREEN NASync DXP4800 Plus | Trusted (20) | 192.168.20.10 | Planned (Phase 8), not yet deployed |
+| Plex (Proxmox guest) | Trusted (20) | 192.168.20.13 | Future, after media storage is added |
  
 ## DHCP Devices
 | Device | VLAN |
@@ -37,9 +38,9 @@
  
 ## Notes
 - VLAN 50 is intentionally skipped
-- Pi-hole runs as a Docker container on the Dell PowerEdge T340 (192.168.20.11), not on OPNsense itself
+- The Dell PowerEdge T340 runs Proxmox VE and sits on the Trusted VLAN. The Proxmox web UI is at https://192.168.20.11:8006
+- Each Proxmox guest has its own IP. Pi-hole is at 192.168.20.12, not on the host address
 - IoT and Guest VLANs use Cloudflare DNS directly, bypassing Pi-hole
 - DHCP is served by Kea in OPNsense 26.1
-- Static IPs are assigned via DHCP reservation in OPNsense
-- 192.168.20.10 is held for the UGREEN NAS. If Pi-hole or Plex migrate to it in Phase 8, update the DNS column and the firewall rules
- 
+- Static IPs are assigned via DHCP reservation in OPNsense, using the MAC address for Proxmox guests
+- The Proxmox host stays on the Trusted VLAN for now. Moving it to the Management VLAN with a trunk port is a possible later change
