@@ -1,6 +1,6 @@
 # Access Point
  
-Wireless network access is provided by a Ubiquiti U6+ (Wi-Fi 6) Access Point. It connects to a trunk port on the Cisco SG300 switch carrying VLANs 20, 30, 40, and 60. The AP is managed via the UniFi Network app (iPhone) and will later be managed via UniFi Network Server hosted on the NAS.
+Wireless network access is provided by a Ubiquiti U6+ (Wi-Fi 6) Access Point. It connects to a trunk port on the Cisco SG300 switch carrying VLANs 20, 30, 40, and 60. The AP is currently managed through the UniFi Network Application on a PC and the UniFi Network app on an iPhone. A self-hosted UniFi Network Server is planned once the server hardware is running services.
  
 ---
  
@@ -22,7 +22,8 @@ Wireless network access is provided by a Ubiquiti U6+ (Wi-Fi 6) Access Point. It
 ---
  
 ## Notes
-- VLAN 10 (Management) is intentionally excluded from the trunk — no wireless management access
-- IoTNet and GuestNet are fully isolated — no inter-VLAN access, internet only
-- UniFi controller is currently the iPhone app — will migrate to NAS-hosted UniFi Network Server in Phase 3
-- Port assignment on the Cisco SG300 will be updated once physically connected
+- VLAN 10 (Management) is intentionally excluded from the trunk, so there is no wireless management access
+- IoTNet and GuestNet are isolated from all other VLANs and have internet access only
+- Only HomeNet is configured today (no VLAN tagging yet). The other SSIDs and VLAN mappings are set up in Phase 4
+- Migration to a self-hosted UniFi Network Server is planned, with the host and timing still to be decided
+- Port assignment on the Cisco SG300 will be updated once the trunk is configured
