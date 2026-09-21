@@ -86,7 +86,7 @@ Cisco SG300 (L2 Switch)
 | Phase 1 | Hardware Assembly | 🔧 In Progress |
 | Phase 2 | OPNsense Setup | ✅ Complete |
 | Phase 3 | Basic Connectivity | ✅ Complete |
-| Phase 4 | VLAN Configuration | 📋 Next Up |
+| Phase 4 | VLAN Configuration | ✅ Complete  |
 | Phase 5 | Proxmox & Pi-hole (DNS & Ad Blocking) | 📋 Planned |
 | Phase 6 | WireGuard (Remote VPN) | 📋 Planned |
 | Phase 7 | Lab VMs | 📋 Planned |
