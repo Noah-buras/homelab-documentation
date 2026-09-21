@@ -1,6 +1,6 @@
 # Access Point
  
-Wireless network access is provided by a Ubiquiti U6+ (Wi-Fi 6) Access Point. It connects to a trunk port on the Cisco SG300 switch carrying VLANs 20, 30, 40, and 60. The AP is currently managed through the UniFi Network Application on a PC and the UniFi Network app on an iPhone. A self-hosted UniFi Network Server is planned once the server hardware is running services.
+Wireless network access is provided by a Ubiquiti U6+ (Wi-Fi 6) Access Point. It connects to a trunk port on the Cisco SG300 switch carrying VLANs 20, 30, 40, and 60. The AP is currently managed through the UniFi Network Application on a PC and the UniFi Network app on an iPhone. A self-hosted UniFi Network Server is planned once the server hardware is running.
  
 ---
  
