@@ -9,9 +9,9 @@ This runbook documents the setup order for the homelab. Phases are designed to b
 - [x] Install DDR5 SODIMM RAM into CWWK mini PC
 - [x] Install NVMe SSD into CWWK mini PC
 - [x] Verify hardware is recognized on boot
-- [ ] Purchase remaining Ethernet cables as needed
-- [ ] Clean Dell PowerEdge T340 (dusty)
-- [ ] Purchase and install drives for Dell PowerEdge T340 (8-bay, currently empty)
+- [x] Purchase remaining Ethernet cables as needed
+- [x] Clean Dell PowerEdge T340 (dusty)
+- [x] Install drives for Dell PowerEdge T340 (8-bay, currently empty)
 ---
 
 ## Phase 2: OPNsense Setup
