@@ -20,7 +20,6 @@ certifications.
 | Switch | Cisco SG300 (L2 mode) | ✅ Online |
 | Access Point | Ubiquiti U6+ (Wi-Fi 6) | ✅ Online |
 | Server/NAS | Dell PowerEdge T340 (8-bay) | 🔧 In Progress |
-| NAS (future) | UGREEN NASync DXP4800 Plus | 📋 Planned |
  
 ---
  
@@ -88,12 +87,11 @@ Cisco SG300 (L2 Switch)
 | Phase 1 | Hardware Assembly | 🔧 In Progress |
 | Phase 2 | OPNsense Setup | ✅ Complete |
 | Phase 3 | Basic Connectivity | ✅ Complete |
-| Phase 4 | VLAN Configuration | 📋 Next Up |
+| Phase 4 | VLAN Configuration | ✅ Complete |
 | Phase 5 | Pi-hole (DNS & Ad Blocking) | 📋 Planned |
 | Phase 6 | WireGuard (Remote VPN) | 📋 Planned |
 | Phase 7 | Plex & NAS Services | 📋 Planned |
-| Phase 8 | UGREEN NAS | 📋 Future |
-| Phase 9 | Suricata (IDS) | 📋 Future |
+| Phase 8 | Suricata (IDS) | 📋 Future |
  
 ---
  
