@@ -22,20 +22,20 @@ Rules are listed in the order they are evaluated.
 |---|---|---|---|---|
 | 1 | WAN (any non-private) | Any | Allow | Internet access |
  
-Trusted and the Dell PowerEdge T340 share VLAN 20, so no firewall rule is needed for Trusted devices to reach Pi-hole or Plex. Access from Trusted to other VLANs is not defined yet and stays blocked.
+The Proxmox host (192.168.20.11) and its guests share VLAN 20 with Trusted devices, so no firewall rule is needed for Trusted devices to reach the Proxmox web UI, Pi-hole, or Plex. Access from Trusted to other VLANs is not defined yet and stays blocked.
  
 ### VLAN 30 (Media)
 | # | Destination | Port | Action | Purpose |
 |---|---|---|---|---|
-| 1 | 192.168.20.11 | 53 (TCP/UDP) | Allow | DNS to Pi-hole |
-| 2 | 192.168.20.11 | 32400 (TCP) | Allow | Plex on the T340 |
+| 1 | 192.168.20.12 | 53 (TCP/UDP) | Allow | DNS to Pi-hole |
+| 2 | 192.168.20.13 | 32400 (TCP) | Allow | Plex (add when Plex is deployed, Phase 8) |
 | 3 | Private_Networks | Any | Block | Fully isolate Media devices |
 | 4 | WAN (any non-private) | Any | Allow | Internet access |
  
 ### VLAN 40 (IoT)
 | # | Destination | Port | Action | Purpose |
 |---|---|---|---|---|
-| 1 | 192.168.20.11 | 32400 (TCP) | Allow | Plex on the T340 |
+| 1 | 192.168.20.13 | 32400 (TCP) | Allow | Plex (add when Plex is deployed, Phase 8) |
 | 2 | Private_Networks | Any | Block | Fully isolate IoT devices |
 | 3 | WAN (any non-private) | Any | Allow | Internet access (DNS goes direct to 1.1.1.1) |
  
@@ -50,9 +50,9 @@ Trusted and the Dell PowerEdge T340 share VLAN 20, so no firewall rule is needed
 ## DNS Rules
 | VLAN | DNS Server | IP | Notes |
 |---|---|---|---|
-| Management (10) | Pi-hole | 192.168.20.11 | Hosted on the Dell PowerEdge T340 |
-| Trusted (20) | Pi-hole | 192.168.20.11 | Hosted on the Dell PowerEdge T340 |
-| Media (30) | Pi-hole | 192.168.20.11 | Needs the DNS allow rule above, since Media is otherwise isolated |
+| Management (10) | Pi-hole | 192.168.20.12 | Proxmox guest on the T340 |
+| Trusted (20) | Pi-hole | 192.168.20.12 | Proxmox guest on the T340 |
+| Media (30) | Pi-hole | 192.168.20.12 | Needs the DNS allow rule above, since Media is otherwise isolated |
 | IoT (40) | Cloudflare | 1.1.1.1 | Direct, Pi-hole excluded |
 | Guest (60) | Cloudflare | 1.1.1.1 | Direct, Pi-hole excluded |
  
@@ -60,9 +60,8 @@ Trusted and the Dell PowerEdge T340 share VLAN 20, so no firewall rule is needed
  
 ## Notes
 - Management VLAN (10) is the only VLAN with access to the OPNsense admin UI and the Cisco SG300 management interface
-- Pi-hole and Plex run on the Dell PowerEdge T340 at 192.168.20.11, not on OPNsense itself
-- If Pi-hole or Plex move to the UGREEN NAS (192.168.20.10) in Phase 8, update the destination IP in the rules above
+- Proxmox (192.168.20.11), Pi-hole (192.168.20.12), and later Plex (192.168.20.13) live on the Dell PowerEdge T340, not on OPNsense
+- The Plex rules are added only when Plex is deployed
 - OPNsense DHCP will push the correct DNS server per VLAN automatically
 - All rules will be implemented and verified during Phase 4 setup
 - Rules will be updated as the lab evolves
- 
