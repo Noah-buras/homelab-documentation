@@ -36,12 +36,14 @@ OPNsense LAN (ETH0 / igc0)
 [Long Ethernet cable — OPNsense in separate room]
    │
 Cisco SG300 (L2 Switch)
-   ├── PC 1 (Trusted VLAN 20)
-   ├── PC 2 (Trusted VLAN 20)
-   ├── Xbox (Media VLAN 30)
+   ├── 4 port switch
+          ├── PC 1 (Trusted VLAN 20)
+          ├── PC 2 (Trusted VLAN 20)
+          └── Dell PowerEdge T340 (In Progress)
    └── Ubiquiti U6+ Access Point
           ├── HomeNet  → VLAN 20 (Trusted)
           ├── MediaNet → VLAN 30 (Media)
+                 └── Xbox (Media VLAN 30)
           ├── IoTNet   → VLAN 40 (IoT)
           └── GuestNet → VLAN 60 (Guest)
 ```
