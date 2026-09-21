@@ -96,7 +96,7 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 | Phase 1: Hardware Assembly | 🔧 In Progress |
 | Phase 2: OPNsense Setup | ✅ Complete |
 | Phase 3: Basic Connectivity | ✅ Complete |
-| Phase 4: VLAN Configuration | 📋 Next Up |
+| Phase 4: VLAN Configuration | ✅ Complete |
 | Phase 5: Pi-hole | 📋 Planned |
 | Phase 6: WireGuard | 📋 Planned |
 | Phase 7: Plex & NAS Services | 📋 Planned |
