@@ -51,14 +51,20 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
  
 ## Phase 5: Proxmox & Pi-hole (DNS & Ad Blocking)
 - [ ] Power on Dell PowerEdge T340 and update firmware and BIOS
-- [ ] Configure the RAID virtual disk on the PERC H330 with the installed drives
-- [ ] Download the Proxmox VE ISO and flash to USB
-- [ ] Install Proxmox VE on the Dell PowerEdge T340
-- [ ] Assign static IP 192.168.20.11 (Trusted VLAN 20)
-- [ ] Access the Proxmox web UI (https://192.168.20.11:8006)
-- [ ] Configure storage for VM disks and ISO images
-- [ ] Deploy Pi-hole as a Proxmox guest (LXC container or VM) at 192.168.20.12
-- [ ] Configure OPNsense DHCP to push Pi-hole DNS (192.168.20.12) to VLANs 10, 20, 30
+- [x] Configure RAID 1 on the PERC H330 with the two 500GB SATA drives (Proxmox OS and guest disks)
+- [ ] Seat all 6 SAS drives (need 4 more trays) and build RAID 10 in one step, since the H330 can't expand it later
+- [x] Download the Proxmox VE ISO and flash to USB
+- [x] Install Proxmox VE on the Dell PowerEdge T340
+- [x] Assign static IP 192.168.20.11 (Trusted VLAN 20)
+- [x] Access the Proxmox web UI (https://192.168.20.11:8006)
+- [x] Switch to the No-Subscription repository and install all updates
+- [ ] Create a non-root admin account and enable two-factor authentication
+- [x] Configure storage for VM disks and ISO images (default `local` and `local-lvm` on the RAID 1 array)
+- [ ] Add the RAID 10 array as Proxmox storage
+- [x] Deploy Pi-hole as an unprivileged LXC container at 192.168.20.12 (nesting enabled, see services/pihole.md)
+- [x] Verify Pi-hole answers DNS (`nslookup google.com 192.168.20.12`)
+- [ ] Configure OPNsense DHCP to push Pi-hole DNS (192.168.20.12) to VLAN 20
+- [ ] Configure OPNsense DHCP to push Pi-hole DNS to VLANs 10 and 30 (after the wireless setup is finished)
 - [ ] Configure OPNsense DHCP to push 1.1.1.1 to VLANs 40, 60
 - [ ] Verify the Media VLAN DNS allow rule (port 53 to 192.168.20.12)
 - [ ] Verify DNS filtering is working across VLANs
@@ -96,11 +102,11 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 ## Status
 | Phase | Status |
 |---|---|
-| Phase 1: Hardware Assembly | 🔧 In Progress |
+| Phase 1: Hardware Assembly | 🔧 In Progress (SAS drive trays) |
 | Phase 2: OPNsense Setup | ✅ Complete |
 | Phase 3: Basic Connectivity | ✅ Complete |
 | Phase 4: VLAN Configuration | ✅ Complete |
-| Phase 5: Proxmox & Pi-hole | 📋 Planned |
+| Phase 5: Proxmox & Pi-hole | 🔧 In Progress |
 | Phase 6: WireGuard | 📋 Planned |
 | Phase 7: Lab VMs | 📋 Planned |
 | Phase 8: Plex & Media Storage | 📋 Future |

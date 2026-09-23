@@ -27,7 +27,7 @@ The Proxmox host (192.168.20.11) and its guests share VLAN 20 with Trusted devic
 ### VLAN 30 (Media)
 | # | Destination | Port | Action | Purpose |
 |---|---|---|---|---|
-| 1 | 192.168.20.12 | 53 (TCP/UDP) | Allow | DNS to Pi-hole |
+| 1 | 192.168.20.12 | 53 (TCP/UDP) | Allow | DNS to Pi-hole (add when VLAN 30 moves to Pi-hole) |
 | 2 | 192.168.20.13 | 32400 (TCP) | Allow | Plex (add when Plex is deployed, Phase 8) |
 | 3 | Private_Networks | Any | Block | Fully isolate Media devices |
 | 4 | WAN (any non-private) | Any | Allow | Internet access |
@@ -50,9 +50,9 @@ The Proxmox host (192.168.20.11) and its guests share VLAN 20 with Trusted devic
 ## DNS Rules
 | VLAN | DNS Server | IP | Notes |
 |---|---|---|---|
-| Management (10) | Pi-hole | 192.168.20.12 | Proxmox guest on the T340 |
-| Trusted (20) | Pi-hole | 192.168.20.12 | Proxmox guest on the T340 |
-| Media (30) | Pi-hole | 192.168.20.12 | Needs the DNS allow rule above, since Media is otherwise isolated |
+| Management (10) | Pi-hole (planned) | 192.168.20.12 | Uses OPNsense Unbound for now |
+| Trusted (20) | Pi-hole | 192.168.20.12 | Live. LXC container on the T340, same subnet so no rule needed |
+| Media (30) | Pi-hole (planned) | 192.168.20.12 | Uses OPNsense Unbound for now. Needs the DNS allow rule above when switched, since Media is otherwise isolated |
 | IoT (40) | Cloudflare | 1.1.1.1 | Direct, Pi-hole excluded |
 | Guest (60) | Cloudflare | 1.1.1.1 | Direct, Pi-hole excluded |
  

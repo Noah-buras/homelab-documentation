@@ -3,9 +3,9 @@
 ## VLAN Table
 | VLAN ID | Name | Subnet | Gateway | DNS |
 |---|---|---|---|---|
-| 10 | Management | 192.168.10.0/24 | 192.168.10.1 | Pi-hole (192.168.20.12) |
+| 10 | Management | 192.168.10.0/24 | 192.168.10.1 | OPNsense Unbound (Pi-hole planned) |
 | 20 | Trusted | 192.168.20.0/24 | 192.168.20.1 | Pi-hole (192.168.20.12) |
-| 30 | Media | 192.168.30.0/24 | 192.168.30.1 | Pi-hole (192.168.20.12) |
+| 30 | Media | 192.168.30.0/24 | 192.168.30.1 | OPNsense Unbound (Pi-hole planned) |
 | 40 | IoT | 192.168.40.0/24 | 192.168.40.1 | 1.1.1.1 (Direct) |
 | 60 | Guest | 192.168.60.0/24 | 192.168.60.1 | 1.1.1.1 (Direct) |
  
@@ -15,7 +15,8 @@
 | OPNsense (Admin UI) | Management (10) | 192.168.10.1 |
 | Cisco SG300 | Management (10) | 192.168.10.2 |
 | Dell PowerEdge T340 (Proxmox host) | Trusted (20) | 192.168.20.11 |
-| Pi-hole (Proxmox guest) | Trusted (20) | 192.168.20.12 |
+| Pi-hole (LXC container 100) | Trusted (20) | 192.168.20.12 |
+| Dell T340 iDRAC | Default LAN | 192.168.1.105 |
  
 ## Reserved for Future Use
 | Device | VLAN | IP Address | Status |
@@ -42,5 +43,7 @@
 - Each Proxmox guest has its own IP. Pi-hole is at 192.168.20.12, not on the host address
 - IoT and Guest VLANs use Cloudflare DNS directly, bypassing Pi-hole
 - DHCP is served by Kea in OPNsense 26.1
-- Static IPs are assigned via DHCP reservation in OPNsense, using the MAC address for Proxmox guests
+- The VLAN 20 Kea DHCP pool is 192.168.20.100 to 192.168.20.200. Servers use static addresses from .2 to .99 so they never overlap the pool
+- The Proxmox host and Pi-hole have static IPs set directly on the device (in the Proxmox installer and in the container's network settings), not DHCP reservations
+- Only VLAN 20 uses Pi-hole for now. VLANs 10 and 30 will move to Pi-hole after the wireless setup is finished (see services/pihole.md)
 - The Proxmox host stays on the Trusted VLAN for now. Moving it to the Management VLAN with a trunk port is a possible later change
