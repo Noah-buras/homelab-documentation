@@ -139,7 +139,7 @@ Problems I hit during setup and how they were fixed:
 ---
 
 ## Next Steps
-- [ ] Include the container in a scheduled Proxmox backup job
+- [x] Include the container in a scheduled Proxmox backup job (nightly, see [proxmox.md](proxmox.md#backups))
 - [ ] Extend Pi-hole to VLANs 10 and 30 once the wireless setup is finished
 - [ ] Handle IPv6 DNS (router advertisements) so clients can't bypass Pi-hole
 - [ ] Decide on a fallback DNS plan, since DNS on VLAN 20 goes down whenever the T340 or the container is rebooted

@@ -16,6 +16,7 @@
 | Cisco SG300 | Management (10) | 192.168.10.2 |
 | Dell PowerEdge T340 (Proxmox host) | Trusted (20) | 192.168.20.11 |
 | Pi-hole (LXC container 100) | Trusted (20) | 192.168.20.12 |
+| lab-01 (VM 201) | Trusted (20) | 192.168.20.21 |
 | Dell T340 iDRAC | Default LAN | 192.168.1.105 |
  
 ## Reserved for Future Use

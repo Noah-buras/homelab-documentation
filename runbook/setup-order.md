@@ -58,12 +58,12 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 - [x] Assign static IP 192.168.20.11 (Trusted VLAN 20)
 - [x] Access the Proxmox web UI (https://192.168.20.11:8006)
 - [x] Switch to the No-Subscription repository and install all updates
-- [ ] Create a non-root admin account and enable two-factor authentication
+- [x] Create a non-root admin account and enable two-factor authentication
 - [x] Configure storage for VM disks and ISO images (default `local` and `local-lvm` on the RAID 1 array)
 - [ ] Add the RAID 10 array as Proxmox storage
 - [x] Deploy Pi-hole as an unprivileged LXC container at 192.168.20.12 (nesting enabled, see services/pihole.md)
 - [x] Verify Pi-hole answers DNS (`nslookup google.com 192.168.20.12`)
-- [ ] Configure OPNsense DHCP to push Pi-hole DNS (192.168.20.12) to VLAN 20
+- [x] Configure OPNsense DHCP to push Pi-hole DNS (192.168.20.12) to VLAN 20
 - [ ] Configure OPNsense DHCP to push Pi-hole DNS to VLANs 10 and 30 (after the wireless setup is finished)
 - [ ] Configure OPNsense DHCP to push 1.1.1.1 to VLANs 40, 60
 - [ ] Verify the Media VLAN DNS allow rule (port 53 to 192.168.20.12)
@@ -80,8 +80,10 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 ---
  
 ## Phase 7: Lab VMs
-- [ ] Create lab VMs on Proxmox as needed
-- [ ] Set up snapshots and backups for VMs
+- [x] Build an Ubuntu Server VM template with SSH key login and the guest agent (see services/ubuntu-template.md)
+- [x] Clone the first lab VM (lab-01, 192.168.20.21)
+- [x] Set up a nightly backup job covering all guests
+- [ ] Create more lab VMs as needed
 - [ ] Document each lab in the services folder
 ---
  
@@ -108,6 +110,6 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 | Phase 4: VLAN Configuration | ✅ Complete |
 | Phase 5: Proxmox & Pi-hole | 🔧 In Progress |
 | Phase 6: WireGuard | 📋 Planned |
-| Phase 7: Lab VMs | 📋 Planned |
+| Phase 7: Lab VMs | 🔧 In Progress |
 | Phase 8: Plex & Media Storage | 📋 Future |
 | Phase 9: Suricata | 📋 Future |

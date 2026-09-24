@@ -75,7 +75,7 @@ Cisco SG300 (L2 Switch)
 | Proxmox VE | Dell PowerEdge T340 | Virtualization for lab VMs and services ([docs](services/proxmox.md)) | ✅ Running |
 | Pi-hole | LXC container on the T340 | DNS / Ad blocking ([docs](services/pihole.md)) | ✅ Running (VLAN 20) |
 | WireGuard | OPNsense | Remote VPN access | 📋 Planned |
-| Lab VMs | Proxmox guests on the T340 | Hands-on labbing | 📋 Planned |
+| Lab VMs | Proxmox guests on the T340 | Hands-on labbing ([template docs](services/ubuntu-template.md)) | ✅ Running |
 | Plex | Proxmox guest on the T340 | Media server (after storage is added) | 📋 Future |
 | Suricata | OPNsense | Intrusion detection | 📋 Future |
 ---
@@ -90,7 +90,7 @@ Cisco SG300 (L2 Switch)
 | Phase 4 | VLAN Configuration | ✅ Complete  |
 | Phase 5 | Proxmox & Pi-hole (DNS & Ad Blocking) | 🔧 In Progress |
 | Phase 6 | WireGuard (Remote VPN) | 📋 Planned |
-| Phase 7 | Lab VMs | 📋 Planned |
+| Phase 7 | Lab VMs | 🔧 In Progress |
 | Phase 8 | Plex & Media Storage | 📋 Future |
 | Phase 9 | Suricata (IDS) | 📋 Future |
  
@@ -105,6 +105,7 @@ See the `/diagrams` folder for logical and physical network diagrams.
 ## Service Docs
 - [Proxmox VE](services/proxmox.md): T340 host setup, storage, and post-install steps
 - [Pi-hole](services/pihole.md): container config, install, and troubleshooting
+- [Ubuntu Server Template](services/ubuntu-template.md): VM template, SSH key hardening, and cloning steps
  
 ---
  

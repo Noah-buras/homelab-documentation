@@ -53,8 +53,8 @@ In **Node > Updates > Repositories**:
 The Debian repositories were left enabled since they are free.
 
 ### 2. Hardening
-- [ ] Create a separate admin account (`noah@pve`, Administrator role on `/`) for day-to-day use, keeping `root@pam` as a break-glass account
-- [ ] Enable TOTP two-factor authentication on both accounts and store the recovery keys somewhere safe
+- [x] Create a separate admin account (`noah@pve`, Administrator role on `/`) for day-to-day use, keeping `root@pam` as a break-glass account
+- [x] Enable TOTP two-factor authentication on both accounts and store the recovery keys somewhere safe
 
 ### 3. Optional: remove the subscription popup
 The "No valid subscription" popup at login is harmless. It can be removed by patching the web UI's JavaScript from the node shell:
@@ -71,8 +71,28 @@ Proxmox updates can undo this, so it may need to be run again after upgrading.
 | ID | Name | Type | IP | Purpose | Docs |
 |---|---|---|---|---|---|
 | 100 | pihole | LXC (Debian 13) | 192.168.20.12 | DNS and ad blocking | [pihole.md](pihole.md) |
+| 200 | ubuntu-base | VM template (Ubuntu Server 26.04) | DHCP | Base image for lab VMs | [ubuntu-template.md](ubuntu-template.md) |
+| 201 | lab-01 | VM (clone of 200) | 192.168.20.21 | General-purpose lab machine | [ubuntu-template.md](ubuntu-template.md) |
 
-Planned IP pattern for the Trusted VLAN: static server addresses go in `.2` to `.99`, outside the Kea DHCP pool (`.100` to `.200`).
+IP pattern for the Trusted VLAN: static addresses go in `.2` to `.99`, outside the Kea DHCP pool (`.100` to `.200`). Core services use the low `.10`s, and lab VMs start at `.21`.
+
+ID pattern: LXC containers use 100 and up, VMs and templates use 200 and up.
+
+---
+
+## Backups
+| Setting | Value |
+|---|---|
+| Location | Datacenter > Backup |
+| Schedule | Daily at 02:00 |
+| Selection | All guests (new guests are included automatically) |
+| Storage | `local` (on the RAID 1 array for now) |
+| Mode | Snapshot (guests keep running during backup) |
+| Compression | ZSTD |
+| Retention | Keep 7 daily, 4 weekly |
+| Notes | `{{guestname}}` |
+
+The job was tested with **Run now** right after creating it. Because the backups live on the same array as the guests, they protect against bad changes and broken updates but not against losing the whole array. They will move to the RAID 10 array once it is built.
 
 ---
 
@@ -92,7 +112,8 @@ Planned IP pattern for the Trusted VLAN: static server addresses go in `.2` to `
 ## Next Steps
 - [ ] Buy 4 compatible drive trays and build the 6-drive SAS RAID 10
 - [ ] Add the RAID 10 array to Proxmox as storage
-- [ ] Set up a scheduled backup job (Datacenter > Backup) for all guests
-- [ ] Build a general-purpose lab VM and convert it to a template for fast cloning
+- [x] Set up a scheduled backup job (Datacenter > Backup) for all guests
+- [ ] Point backups at the RAID 10 array once it exists
+- [x] Build a general-purpose lab VM and convert it to a template for fast cloning (see [ubuntu-template.md](ubuntu-template.md))
 - [ ] Connect iDRAC with a second Ethernet cable for remote power and console access
 - [ ] Put the server on a UPS
