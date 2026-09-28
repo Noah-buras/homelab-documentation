@@ -149,6 +149,7 @@ The VM is not booted again after cleanup, or it would regenerate the IDs that we
 | ID | Name | IP | Purpose |
 |---|---|---|---|
 | 201 | lab-01 | 192.168.20.21 | General-purpose lab machine |
+| 202 | unifi | 192.168.20.14 | UniFi OS Server (see [unifi.md](unifi.md)) |
 
 ---
 

@@ -13,9 +13,11 @@
 | Device | VLAN | IP Address |
 |---|---|---|
 | OPNsense (Admin UI) | Management (10) | 192.168.10.1 |
-| Cisco SG300 | Management (10) | 192.168.10.2 |
+| Cisco SG300-28PP | Default LAN (VLAN 1) | 192.168.1.100 (DHCP, moving to 192.168.10.2 on VLAN 10) |
+| Ubiquiti U6+ | Management (10) | 192.168.10.3 (Kea reservation) |
 | Dell PowerEdge T340 (Proxmox host) | Trusted (20) | 192.168.20.11 |
 | Pi-hole (LXC container 100) | Trusted (20) | 192.168.20.12 |
+| UniFi OS Server (VM 202) | Trusted (20) | 192.168.20.14 |
 | lab-01 (VM 201) | Trusted (20) | 192.168.20.21 |
 | Dell T340 iDRAC | Default LAN | 192.168.1.105 |
  
@@ -35,8 +37,8 @@
 | Xbox | Media (30) |
 | Wireless Devices (media) | Media (30) |
 | IoT Devices (future) | IoT (40) |
-| Wireless Devices (IoT) | IoT (40) |
-| Wireless Devices (guests) | Guest (60) |
+| Wireless Devices (IoT) | IoT (40), once IoTNet is deployed |
+| Wireless Devices (guests) | Guest (60), once GuestNet is deployed |
  
 ## Notes
 - VLAN 50 is intentionally skipped
@@ -46,5 +48,7 @@
 - DHCP is served by Kea in OPNsense 26.1
 - The VLAN 20 Kea DHCP pool is 192.168.20.100 to 192.168.20.200. Servers use static addresses from .2 to .99 so they never overlap the pool
 - The Proxmox host and Pi-hole have static IPs set directly on the device (in the Proxmox installer and in the container's network settings), not DHCP reservations
-- Only VLAN 20 uses Pi-hole for now. VLANs 10 and 30 will move to Pi-hole after the wireless setup is finished (see services/pihole.md)
+- Only VLAN 20 uses Pi-hole for now. VLANs 10 and 30 will move to Pi-hole next, now that the wireless setup is finished (see services/pihole.md)
+- The U6+ is the first device on the Management VLAN. Its switch port (GE4) uses VLAN 10 as the untagged native VLAN (see network/access-point.md)
+- The SG300 is still managed on VLAN 1 at 192.168.1.100. Moving it to 192.168.10.2 is a planned change
 - The Proxmox host stays on the Trusted VLAN for now. Moving it to the Management VLAN with a trunk port is a possible later change

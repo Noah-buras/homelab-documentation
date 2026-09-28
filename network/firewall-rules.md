@@ -16,6 +16,8 @@ Rules are listed in the order they are evaluated.
 | # | Destination | Port | Action | Purpose |
 |---|---|---|---|---|
 | 1 | Any | Any | Allow | Full access for management |
+
+The U6+ access point (192.168.10.3) sits on this VLAN. This rule is what lets it check in with the UniFi OS Server at 192.168.20.14 on port 8080, since the controller is on a different VLAN. Replies come back through OPNsense's state tracking, so no rule is needed on the Trusted side.
  
 ### VLAN 20 (Trusted)
 | # | Destination | Port | Action | Purpose |
@@ -59,7 +61,7 @@ The Proxmox host (192.168.20.11) and its guests share VLAN 20 with Trusted devic
 ---
  
 ## Notes
-- Management VLAN (10) is the only VLAN with access to the OPNsense admin UI and the Cisco SG300 management interface
+- Management VLAN (10) is intended to be the only VLAN with access to the OPNsense admin UI and the Cisco SG300 management interface. The SG300 is still managed on VLAN 1 (192.168.1.100) until it moves to 192.168.10.2
 - Proxmox (192.168.20.11), Pi-hole (192.168.20.12), and later Plex (192.168.20.13) live on the Dell PowerEdge T340, not on OPNsense
 - The Plex rules are added only when Plex is deployed
 - OPNsense DHCP will push the correct DNS server per VLAN automatically

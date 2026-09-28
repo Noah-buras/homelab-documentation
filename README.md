@@ -4,7 +4,7 @@ Home lab build documenting network setup, VLAN configuration, and self-hosted se
 ---
  
 ## Overview
-A home lab built around an Intel N100 mini PC running OPNsense, a Cisco SG300 managed switch, a Ubiquiti U6+ Wi-Fi 6 access point, and a Dell PowerEdge T340 server running Proxmox. Designed to develop hands-on networking and systems skills and serve as a portfolio for Network+ and CCNA certifications.
+A home lab built around an Intel N100 mini PC running OPNsense, a Cisco SG300-28PP managed PoE switch, a Ubiquiti U6+ Wi-Fi 6 access point, and a Dell PowerEdge T340 server running Proxmox. Designed to develop hands-on networking and systems skills and serve as a portfolio for Network+ and CCNA certifications.
  
 ---
  
@@ -13,7 +13,7 @@ A home lab built around an Intel N100 mini PC running OPNsense, a Cisco SG300 ma
 | Device | Model | Status |
 |---|---|---|
 | Firewall/Router | CWWK CW-ADLN-4L Mini PC (Intel N100, 4x 2.5GbE) | ✅ Online |
-| Switch | Cisco SG300 (L2 mode) | ✅ Online |
+| Switch | Cisco SG300-28PP (L2 mode, PoE+) | ✅ Online |
 | Access Point | Ubiquiti U6+ (Wi-Fi 6) | ✅ Online |
 | Main Server | Dell PowerEdge T340 (8-bay, Proxmox host) | ✅ Online (storage expansion in progress) |
  
@@ -29,29 +29,30 @@ Cox Modem (ARRIS SB8200)
 OPNsense WAN (ETH1 / igc1)
 OPNsense LAN (ETH0 / igc0)
    │
-[Long Ethernet cable — OPNsense in separate room]
+[Long Ethernet cable, OPNsense in separate room]
    │
 Cisco SG300 (L2 Switch)
    ├── 4 port switch
           ├── PC 1 (Trusted VLAN 20)
           ├── PC 2 (Trusted VLAN 20)
           └── Dell PowerEdge T340 (Proxmox, Trusted VLAN 20)
-                 └── Pi-hole LXC (192.168.20.12)
-   └── Ubiquiti U6+ Access Point
+                 ├── Pi-hole LXC (192.168.20.12)
+                 └── UniFi OS Server VM (192.168.20.14)
+   └── Ubiquiti U6+ Access Point (GE4, Management VLAN 10, 192.168.10.3)
           ├── HomeNet  → VLAN 20 (Trusted)
           ├── MediaNet → VLAN 30 (Media)
-                 └── Xbox (Media VLAN 30)
-          ├── IoTNet   → VLAN 40 (IoT)
-          └── GuestNet → VLAN 60 (Guest)
+          ├── IoTNet   → VLAN 40 (IoT, VLAN ready, SSID not deployed)
+          └── GuestNet → VLAN 60 (Guest, VLAN ready, SSID not deployed)
 ```
  
 ---
  
 ## Network Design
  
-- **5 VLANs** — Management, Trusted, Media, IoT, Guest
-- **Subnet scheme** — `192.168.x.0/24` per VLAN
-- **Firewall** — OPNsense with inter-VLAN rules
+- **5 VLANs**: Management, Trusted, Media, IoT, Guest
+- **Subnet scheme**: `192.168.x.0/24` per VLAN
+- **Firewall**: OPNsense with inter-VLAN rules
+- **Wireless**: U6+ managed by a self-hosted UniFi OS Server, with each SSID tagged onto its own VLAN ([docs](network/access-point.md))
 - **DNS**: Pi-hole running as an LXC container on the T340 (192.168.20.12). Currently serving the Trusted VLAN (20) only
 ### VLAN Table
  
@@ -74,6 +75,7 @@ Cisco SG300 (L2 Switch)
 | OPNsense | CWWK Mini PC | Firewall / Router | ✅ Running |
 | Proxmox VE | Dell PowerEdge T340 | Virtualization for lab VMs and services ([docs](services/proxmox.md)) | ✅ Running |
 | Pi-hole | LXC container on the T340 | DNS / Ad blocking ([docs](services/pihole.md)) | ✅ Running (VLAN 20) |
+| UniFi OS Server | VM on the T340 | Wireless controller for the U6+ ([docs](services/unifi.md)) | ✅ Running |
 | WireGuard | OPNsense | Remote VPN access | 📋 Planned |
 | Lab VMs | Proxmox guests on the T340 | Hands-on labbing ([template docs](services/ubuntu-template.md)) | ✅ Running |
 | Plex | Proxmox guest on the T340 | Media server (after storage is added) | 📋 Future |
@@ -106,6 +108,7 @@ See the `/diagrams` folder for logical and physical network diagrams.
 - [Proxmox VE](services/proxmox.md): T340 host setup, storage, and post-install steps
 - [Pi-hole](services/pihole.md): container config, install, and troubleshooting
 - [Ubuntu Server Template](services/ubuntu-template.md): VM template, SSH key hardening, and cloning steps
+- [UniFi OS Server](services/unifi.md): self-hosted wireless controller, install, and AP management
  
 ---
  

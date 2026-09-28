@@ -42,7 +42,11 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 - [x] Configure trunk port on Cisco SG300 to OPNsense (all VLANs)
 - [x] Configure trunk port on Cisco SG300 to U6+ (VLANs 20, 30, 40, 60)
 - [x] Configure access ports on Cisco SG300 per device (Dell T340 on VLAN 20, untagged)
-- [x] Map SSIDs to VLANs in UniFi (HomeNet to 20, MediaNet to 30, IoTNet to 40, GuestNet to 60)
+- [x] Deploy a self-hosted UniFi OS Server on Proxmox (VM 202, 192.168.20.14, see services/unifi.md)
+- [x] Move the U6+ to the Management VLAN (192.168.10.3, VLAN 10 untagged on GE4) and adopt it on the new controller
+- [x] Map SSIDs to VLANs in UniFi (HomeNet to 20, MediaNet to 30)
+- [ ] Deploy IoTNet (40) and GuestNet (60) if needed (VLANs are ready, SSIDs not broadcast)
+- [ ] Move the SG300 management IP from VLAN 1 (192.168.1.100) to VLAN 10 (192.168.10.2)
 - [x] Create the Private_Networks alias and implement firewall rules per VLAN (see network/firewall-rules.md)
 - [x] Verify each VLAN has an allow-to-WAN rule and that pass rules sit above block rules
 - [x] Verify devices receive correct IPs per VLAN
@@ -64,7 +68,7 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 - [x] Deploy Pi-hole as an unprivileged LXC container at 192.168.20.12 (nesting enabled, see services/pihole.md)
 - [x] Verify Pi-hole answers DNS (`nslookup google.com 192.168.20.12`)
 - [x] Configure OPNsense DHCP to push Pi-hole DNS (192.168.20.12) to VLAN 20
-- [ ] Configure OPNsense DHCP to push Pi-hole DNS to VLANs 10 and 30 (after the wireless setup is finished)
+- [ ] Configure OPNsense DHCP to push Pi-hole DNS to VLANs 10 and 30 (the wireless setup is now finished)
 - [ ] Configure OPNsense DHCP to push 1.1.1.1 to VLANs 40, 60
 - [ ] Verify the Media VLAN DNS allow rule (port 53 to 192.168.20.12)
 - [ ] Verify DNS filtering is working across VLANs
@@ -83,6 +87,7 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 - [x] Build an Ubuntu Server VM template with SSH key login and the guest agent (see services/ubuntu-template.md)
 - [x] Clone the first lab VM (lab-01, 192.168.20.21)
 - [x] Set up a nightly backup job covering all guests
+- [x] Deploy UniFi OS Server as a VM from the template (VM 202, see services/unifi.md)
 - [ ] Create more lab VMs as needed
 - [ ] Document each lab in the services folder
 ---

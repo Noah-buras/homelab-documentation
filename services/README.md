@@ -6,3 +6,4 @@ Documentation for self-hosted services running in the lab.
 | Proxmox VE | Dell PowerEdge T340 | [proxmox.md](proxmox.md) |
 | Pi-hole | LXC container on Proxmox | [pihole.md](pihole.md) |
 | Ubuntu Server Template | VM template on Proxmox | [ubuntu-template.md](ubuntu-template.md) |
+| UniFi OS Server | VM on Proxmox | [unifi.md](unifi.md) |

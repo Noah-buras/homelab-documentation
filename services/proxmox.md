@@ -73,6 +73,7 @@ Proxmox updates can undo this, so it may need to be run again after upgrading.
 | 100 | pihole | LXC (Debian 13) | 192.168.20.12 | DNS and ad blocking | [pihole.md](pihole.md) |
 | 200 | ubuntu-base | VM template (Ubuntu Server 26.04) | DHCP | Base image for lab VMs | [ubuntu-template.md](ubuntu-template.md) |
 | 201 | lab-01 | VM (clone of 200) | 192.168.20.21 | General-purpose lab machine | [ubuntu-template.md](ubuntu-template.md) |
+| 202 | unifi | VM (full clone of 200) | 192.168.20.14 | UniFi OS Server, wireless controller | [unifi.md](unifi.md) |
 
 IP pattern for the Trusted VLAN: static addresses go in `.2` to `.99`, outside the Kea DHCP pool (`.100` to `.200`). Core services use the low `.10`s, and lab VMs start at `.21`.
 
