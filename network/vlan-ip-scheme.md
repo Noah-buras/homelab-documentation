@@ -17,6 +17,7 @@
 | Ubiquiti U6+ | Management (10) | 192.168.10.3 (Kea reservation) |
 | Dell PowerEdge T340 (Proxmox host) | Trusted (20) | 192.168.20.11 |
 | Pi-hole (LXC container 100) | Trusted (20) | 192.168.20.12 |
+| Jellyfin (LXC container 101) | Trusted (20) | 192.168.20.13 |
 | UniFi OS Server (VM 202) | Trusted (20) | 192.168.20.14 |
 | lab-01 (VM 201) | Trusted (20) | 192.168.20.21 |
 | Dell T340 iDRAC | Default LAN | 192.168.1.105 |
@@ -24,7 +25,7 @@
 ## Reserved for Future Use
 | Device | VLAN | IP Address | Status |
 |---|---|---|---|
-| Plex (Proxmox guest) | Trusted (20) | 192.168.20.13 | Future, after media storage is added |
+| None right now | | | 192.168.20.13 was reserved for a media server and is now used by Jellyfin |
  
 ## DHCP Devices
 | Device | VLAN |
@@ -43,7 +44,7 @@
 ## Notes
 - VLAN 50 is intentionally skipped
 - The Dell PowerEdge T340 runs Proxmox VE and sits on the Trusted VLAN. The Proxmox web UI is at https://192.168.20.11:8006
-- Each Proxmox guest has its own IP. Pi-hole is at 192.168.20.12, not on the host address
+- Each Proxmox guest has its own IP. Pi-hole is at 192.168.20.12 and Jellyfin is at 192.168.20.13, not on the host address
 - IoT and Guest VLANs use Cloudflare DNS directly, bypassing Pi-hole
 - DHCP is served by Kea in OPNsense 26.1
 - The VLAN 20 Kea DHCP pool is 192.168.20.100 to 192.168.20.200. Servers use static addresses from .2 to .99 so they never overlap the pool

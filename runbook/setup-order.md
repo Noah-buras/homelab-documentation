@@ -12,6 +12,7 @@ This runbook documents the setup order for the homelab. Phases are designed to b
 - [x] Install initial drives in Dell PowerEdge T340 (about 2 TB)
 - [x] Purchase remaining Ethernet cables as needed
 - [x] Clean Dell PowerEdge T340 (dusty)
+- [x] Mount all 6 SAS drives in compatible trays and install them (see services/storage.md)
 ---
  
 ## Phase 2: OPNsense Setup
@@ -56,7 +57,8 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 ## Phase 5: Proxmox & Pi-hole (DNS & Ad Blocking)
 - [ ] Power on Dell PowerEdge T340 and update firmware and BIOS
 - [x] Configure RAID 1 on the PERC H330 with the two 500GB SATA drives (Proxmox OS and guest disks)
-- [ ] Seat all 6 SAS drives (need 4 more trays) and build RAID 10 in one step, since the H330 can't expand it later
+- [x] Seat all 6 SAS drives and build RAID 10 in one step, since the H330 can't expand it later (see services/storage.md)
+- [ ] Replace the SAS drive that reports a predicted failure
 - [x] Download the Proxmox VE ISO and flash to USB
 - [x] Install Proxmox VE on the Dell PowerEdge T340
 - [x] Assign static IP 192.168.20.11 (Trusted VLAN 20)
@@ -64,7 +66,7 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 - [x] Switch to the No-Subscription repository and install all updates
 - [x] Create a non-root admin account and enable two-factor authentication
 - [x] Configure storage for VM disks and ISO images (default `local` and `local-lvm` on the RAID 1 array)
-- [ ] Add the RAID 10 array as Proxmox storage
+- [x] Add the RAID 10 array as Proxmox storage (`media` directory at /mnt/pve/media)
 - [x] Deploy Pi-hole as an unprivileged LXC container at 192.168.20.12 (nesting enabled, see services/pihole.md)
 - [x] Verify Pi-hole answers DNS (`nslookup google.com 192.168.20.12`)
 - [x] Configure OPNsense DHCP to push Pi-hole DNS (192.168.20.12) to VLAN 20
@@ -92,11 +94,16 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 - [ ] Document each lab in the services folder
 ---
  
-## Phase 8: Plex & Media Storage (Future)
-- [ ] Add drives for media storage to the Dell PowerEdge T340
-- [ ] Deploy Plex Media Server as a Proxmox guest (LXC container or VM) at 192.168.20.13
-- [ ] Add Plex firewall rules (VLANs 30 and 40 to 192.168.20.13, port 32400)
-- [ ] Test Plex access from Media VLAN devices
+## Phase 8: Jellyfin & Media Storage
+Jellyfin was chosen over Plex because it is free and open source, needs no account, and keeps every feature available without a paid pass.
+
+- [x] Add media storage to the Dell PowerEdge T340 (SAS RAID 10, about 837 GB)
+- [x] Deploy Jellyfin as an LXC container at 192.168.20.13 (see services/jellyfin.md)
+- [x] Create the Movies and Shows libraries and install the Jellyfin Enhanced plugin
+- [ ] Load the first media and confirm playback
+- [ ] Add Jellyfin firewall rules (VLAN 30 to 192.168.20.13, port 8096)
+- [ ] Test Jellyfin access from Media VLAN devices
+- [ ] Later: add larger drives for more media space (see services/storage.md)
 ---
  
 ## Phase 9: Suricata (Intrusion Detection)
@@ -109,12 +116,12 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 ## Status
 | Phase | Status |
 |---|---|
-| Phase 1: Hardware Assembly | 🔧 In Progress (SAS drive trays) |
+| Phase 1: Hardware Assembly | ✅ Complete |
 | Phase 2: OPNsense Setup | ✅ Complete |
 | Phase 3: Basic Connectivity | ✅ Complete |
 | Phase 4: VLAN Configuration | ✅ Complete |
 | Phase 5: Proxmox & Pi-hole | 🔧 In Progress |
 | Phase 6: WireGuard | 📋 Planned |
 | Phase 7: Lab VMs | 🔧 In Progress |
-| Phase 8: Plex & Media Storage | 📋 Future |
+| Phase 8: Jellyfin & Media Storage | 🔧 In Progress |
 | Phase 9: Suricata | 📋 Future |

@@ -15,7 +15,7 @@ A home lab built around an Intel N100 mini PC running OPNsense, a Cisco SG300-28
 | Firewall/Router | CWWK CW-ADLN-4L Mini PC (Intel N100, 4x 2.5GbE) | ✅ Online |
 | Switch | Cisco SG300-28PP (L2 mode, PoE+) | ✅ Online |
 | Access Point | Ubiquiti U6+ (Wi-Fi 6) | ✅ Online |
-| Main Server | Dell PowerEdge T340 (8-bay, Proxmox host) | ✅ Online (storage expansion in progress) |
+| Main Server | Dell PowerEdge T340 (8-bay, Proxmox host) | ✅ Online (all 8 bays populated) |
  
 ---
  
@@ -37,6 +37,7 @@ Cisco SG300 (L2 Switch)
           ├── PC 2 (Trusted VLAN 20)
           └── Dell PowerEdge T340 (Proxmox, Trusted VLAN 20)
                  ├── Pi-hole LXC (192.168.20.12)
+                 ├── Jellyfin LXC (192.168.20.13)
                  └── UniFi OS Server VM (192.168.20.14)
    └── Ubiquiti U6+ Access Point (GE4, Management VLAN 10, 192.168.10.3)
           ├── HomeNet  → VLAN 20 (Trusted)
@@ -78,7 +79,7 @@ Cisco SG300 (L2 Switch)
 | UniFi OS Server | VM on the T340 | Wireless controller for the U6+ ([docs](services/unifi.md)) | ✅ Running |
 | WireGuard | OPNsense | Remote VPN access | 📋 Planned |
 | Lab VMs | Proxmox guests on the T340 | Hands-on labbing ([template docs](services/ubuntu-template.md)) | ✅ Running |
-| Plex | Proxmox guest on the T340 | Media server (after storage is added) | 📋 Future |
+| Jellyfin | LXC container on the T340 | Media server, library on the SAS RAID 10 array ([docs](services/jellyfin.md)) | ✅ Running (VLAN 20) |
 | Suricata | OPNsense | Intrusion detection | 📋 Future |
 ---
  
@@ -86,14 +87,14 @@ Cisco SG300 (L2 Switch)
  
 | Phase | Description | Status |
 |---|---|---|
-| Phase 1 | Hardware Assembly | 🔧 In Progress |
+| Phase 1 | Hardware Assembly | ✅ Complete |
 | Phase 2 | OPNsense Setup | ✅ Complete |
 | Phase 3 | Basic Connectivity | ✅ Complete |
 | Phase 4 | VLAN Configuration | ✅ Complete  |
 | Phase 5 | Proxmox & Pi-hole (DNS & Ad Blocking) | 🔧 In Progress |
 | Phase 6 | WireGuard (Remote VPN) | 📋 Planned |
 | Phase 7 | Lab VMs | 🔧 In Progress |
-| Phase 8 | Plex & Media Storage | 📋 Future |
+| Phase 8 | Jellyfin & Media Storage | 🔧 In Progress |
 | Phase 9 | Suricata (IDS) | 📋 Future |
  
 
@@ -106,9 +107,11 @@ See the `/diagrams` folder for logical and physical network diagrams.
  
 ## Service Docs
 - [Proxmox VE](services/proxmox.md): T340 host setup, storage, and post-install steps
+- [Storage](services/storage.md): drive layout, building the SAS RAID 10, drive health checks, and the upgrade plan
 - [Pi-hole](services/pihole.md): container config, install, and troubleshooting
 - [Ubuntu Server Template](services/ubuntu-template.md): VM template, SSH key hardening, and cloning steps
 - [UniFi OS Server](services/unifi.md): self-hosted wireless controller, install, and AP management
+- [Jellyfin](services/jellyfin.md): media server container, library layout, and how media gets added
  
 ---
  

@@ -24,20 +24,20 @@ The U6+ access point (192.168.10.3) sits on this VLAN. This rule is what lets it
 |---|---|---|---|---|
 | 1 | WAN (any non-private) | Any | Allow | Internet access |
  
-The Proxmox host (192.168.20.11) and its guests share VLAN 20 with Trusted devices, so no firewall rule is needed for Trusted devices to reach the Proxmox web UI, Pi-hole, or Plex. Access from Trusted to other VLANs is not defined yet and stays blocked.
+The Proxmox host (192.168.20.11) and its guests share VLAN 20 with Trusted devices, so no firewall rule is needed for Trusted devices to reach the Proxmox web UI, Pi-hole, or Jellyfin. Access from Trusted to other VLANs is not defined yet and stays blocked.
  
 ### VLAN 30 (Media)
 | # | Destination | Port | Action | Purpose |
 |---|---|---|---|---|
 | 1 | 192.168.20.12 | 53 (TCP/UDP) | Allow | DNS to Pi-hole (add when VLAN 30 moves to Pi-hole) |
-| 2 | 192.168.20.13 | 32400 (TCP) | Allow | Plex (add when Plex is deployed, Phase 8) |
+| 2 | 192.168.20.13 | 8096 (TCP) | Allow | Jellyfin (not added yet, needed before Media devices can stream) |
 | 3 | Private_Networks | Any | Block | Fully isolate Media devices |
 | 4 | WAN (any non-private) | Any | Allow | Internet access |
  
 ### VLAN 40 (IoT)
 | # | Destination | Port | Action | Purpose |
 |---|---|---|---|---|
-| 1 | 192.168.20.13 | 32400 (TCP) | Allow | Plex (add when Plex is deployed, Phase 8) |
+| 1 | 192.168.20.13 | 8096 (TCP) | Allow | Jellyfin (not added yet, only needed if IoT devices will stream) |
 | 2 | Private_Networks | Any | Block | Fully isolate IoT devices |
 | 3 | WAN (any non-private) | Any | Allow | Internet access (DNS goes direct to 1.1.1.1) |
  
@@ -62,8 +62,8 @@ The Proxmox host (192.168.20.11) and its guests share VLAN 20 with Trusted devic
  
 ## Notes
 - Management VLAN (10) is intended to be the only VLAN with access to the OPNsense admin UI and the Cisco SG300 management interface. The SG300 is still managed on VLAN 1 (192.168.1.100) until it moves to 192.168.10.2
-- Proxmox (192.168.20.11), Pi-hole (192.168.20.12), and later Plex (192.168.20.13) live on the Dell PowerEdge T340, not on OPNsense
-- The Plex rules are added only when Plex is deployed
+- Proxmox (192.168.20.11), Pi-hole (192.168.20.12), and Jellyfin (192.168.20.13) live on the Dell PowerEdge T340, not on OPNsense
+- Jellyfin replaced the planned Plex server, so the media rules use port 8096 instead of 32400. They are still to be added in OPNsense
 - OPNsense DHCP will push the correct DNS server per VLAN automatically
 - All rules will be implemented and verified during Phase 4 setup
 - Rules will be updated as the lab evolves

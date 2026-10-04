@@ -1,6 +1,6 @@
 # Proxmox VE
 
-The Dell PowerEdge T340 is the main server in the lab. It runs Proxmox VE, which hosts containers and VMs for services like Pi-hole and future lab machines.
+The Dell PowerEdge T340 is the main server in the lab. It runs Proxmox VE, which hosts containers and VMs for services like Pi-hole, Jellyfin, and the lab machines.
 
 ---
 
@@ -23,18 +23,22 @@ The Dell PowerEdge T340 is the main server in the lab. It runs Proxmox VE, which
 | Array | Drives | RAID Level | Usable | Purpose | Status |
 |---|---|---|---|---|---|
 | Boot / VM array | 2x 500GB SATA | RAID 1 | ~465GB | Proxmox OS, container and VM disks | ✅ Online |
-| Data array | 6x 300GB SAS | RAID 10 | ~837GB | VM storage, backups, future media | 📋 Waiting on drive trays |
+| Media array | 6x 300GB SAS (10K) | RAID 10 | ~837GB | Jellyfin media library | ✅ Online (one drive flagged for replacement) |
 
-Proxmox currently uses its default storage on the RAID 1 array:
-- `local`: ISO images, container templates, and backups
-- `local-lvm`: container and VM disks
+Proxmox storage:
+- `local` (RAID 1): ISO images, container templates, and backups
+- `local-lvm` (RAID 1): container and VM disks
+- `media` (RAID 10): directory storage mounted at `/mnt/pve/media`, holding the Jellyfin library
+
+The full build steps, drive health checks, and upgrade plan are in [storage.md](storage.md).
 
 ### Why hardware RAID instead of ZFS
 The PERC H330 would need to be crossflashed to IT mode to pass the drives through for ZFS. That is not officially supported by Dell and adds risk and complexity, so the lab uses the controller's hardware RAID.
 
 ### RAID 10 notes
-- Only 2 of the 6 SAS drives are seated right now. The drives came in caddies that don't fit the T340's bays, so 4 more compatible trays are needed.
-- The H330 cannot expand a RAID 10 after it is created, so the array has to be built with all 6 drives at once.
+- The SAS drives came in caddies that don't fit the T340's bays, so the array waited on compatible trays. With all 6 drives in the new trays, the array was built in one step.
+- The H330 cannot expand a RAID 10 after it is created, so the array had to be built with all 6 drives at once. It can still rebuild onto a replacement drive in the same bay.
+- One of the six drives reports a predicted failure and is due to be replaced (see [storage.md](storage.md)).
 - The spare PERC 6/i controller I was given is an older generation and is not compatible with the T340's backplane, so it is not used.
 
 ---
@@ -71,6 +75,7 @@ Proxmox updates can undo this, so it may need to be run again after upgrading.
 | ID | Name | Type | IP | Purpose | Docs |
 |---|---|---|---|---|---|
 | 100 | pihole | LXC (Debian 13) | 192.168.20.12 | DNS and ad blocking | [pihole.md](pihole.md) |
+| 101 | jellyfin | LXC (Debian 13) | 192.168.20.13 | Media server | [jellyfin.md](jellyfin.md) |
 | 200 | ubuntu-base | VM template (Ubuntu Server 26.04) | DHCP | Base image for lab VMs | [ubuntu-template.md](ubuntu-template.md) |
 | 201 | lab-01 | VM (clone of 200) | 192.168.20.21 | General-purpose lab machine | [ubuntu-template.md](ubuntu-template.md) |
 | 202 | unifi | VM (full clone of 200) | 192.168.20.14 | UniFi OS Server, wireless controller | [unifi.md](unifi.md) |
@@ -93,7 +98,7 @@ ID pattern: LXC containers use 100 and up, VMs and templates use 200 and up.
 | Retention | Keep 7 daily, 4 weekly |
 | Notes | `{{guestname}}` |
 
-The job was tested with **Run now** right after creating it. Because the backups live on the same array as the guests, they protect against bad changes and broken updates but not against losing the whole array. They will move to the RAID 10 array once it is built.
+The job was tested with **Run now** right after creating it. Because the backups live on the same array as the guests, they protect against bad changes and broken updates but not against losing the whole array. The original plan was to move them to the SAS RAID 10 array. That is on hold: one SAS drive is predicted to fail, and the array is now dedicated to media. Backups will get a better home when larger drives are added (see [storage.md](storage.md)).
 
 ---
 
@@ -106,15 +111,19 @@ The job was tested with **Run now** right after creating it. Because the backups
 ## Lessons Learned
 - **Shut down cleanly before moving the server.** Use the Shutdown button in the web UI, or a short press of the power button (never a long press), and wait for the fans to stop before unplugging.
 - **Enterprise repos break updates without a subscription.** Switching to the No-Subscription repo is one of the first things to do after install.
+- **Use the node's Shutdown button, not Bulk Shutdown.** Bulk Shutdown only stops the guests and leaves the server powered on.
+- **Power down before pulling drives that are in an array.** Hot-swap is for replacing one failed drive in a redundant array, not for removing several members at once.
+- **Pi-hole goes down with the server.** Every device on VLAN 20 loses DNS while the T340 is off, so plan maintenance around that.
 - **A RAID 1 array is not a backup.** It survives a failed drive, not a bad config change or a deleted container. Scheduled backups are still needed.
 
 ---
 
 ## Next Steps
-- [ ] Buy 4 compatible drive trays and build the 6-drive SAS RAID 10
-- [ ] Add the RAID 10 array to Proxmox as storage
+- [x] Buy compatible drive trays and build the 6-drive SAS RAID 10
+- [x] Add the RAID 10 array to Proxmox as storage (`media` directory)
+- [ ] Replace the SAS drive that reports a predicted failure
 - [x] Set up a scheduled backup job (Datacenter > Backup) for all guests
-- [ ] Point backups at the RAID 10 array once it exists
+- [ ] Move backups off the RAID 1 array once larger drives are added
 - [x] Build a general-purpose lab VM and convert it to a template for fast cloning (see [ubuntu-template.md](ubuntu-template.md))
 - [ ] Connect iDRAC with a second Ethernet cable for remote power and console access
 - [ ] Put the server on a UPS
