@@ -145,7 +145,7 @@ Jellyfin sits on VLAN 20, so Trusted devices reach it with no firewall rule. The
 ---
 
 ## Backups
-- Container 101 is covered by the nightly 02:00 backup job for all guests (see [proxmox.md](proxmox.md)). That protects the Jellyfin install, settings, and library metadata
+- Container 101 is covered by the nightly 21:00 backup job, which writes to the `media` storage (see [proxmox.md](proxmox.md)). That protects the Jellyfin install, settings, and library metadata
 - The bind-mounted media folder is not part of that backup. The media itself is only protected by the RAID 10 array's redundancy, and the original discs are the fallback
 
 ---

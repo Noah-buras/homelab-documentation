@@ -26,9 +26,9 @@ The Dell PowerEdge T340 is the main server in the lab. It runs Proxmox VE, which
 | Media array | 6x 300GB SAS (10K) | RAID 10 | ~837GB | Jellyfin media library | ✅ Online (one drive flagged for replacement) |
 
 Proxmox storage:
-- `local` (RAID 1): ISO images, container templates, and backups
+- `local` (RAID 1): ISO images and container templates
 - `local-lvm` (RAID 1): container and VM disks
-- `media` (RAID 10): directory storage mounted at `/mnt/pve/media`, holding the Jellyfin library
+- `media` (RAID 10): directory storage mounted at `/mnt/pve/media`, holding the Jellyfin library and guest backups
 
 The full build steps, drive health checks, and upgrade plan are in [storage.md](storage.md).
 
@@ -90,15 +90,24 @@ ID pattern: LXC containers use 100 and up, VMs and templates use 200 and up.
 | Setting | Value |
 |---|---|
 | Location | Datacenter > Backup |
-| Schedule | Daily at 02:00 |
-| Selection | All guests (new guests are included automatically) |
-| Storage | `local` (on the RAID 1 array for now) |
+| Schedule | Daily at 21:00 |
+| Selection | Guests 100 (pihole), 101 (jellyfin), and 202 (unifi) |
+| Storage | `media` (SAS RAID 10 array, files in `/mnt/pve/media/dump`) |
 | Mode | Snapshot (guests keep running during backup) |
 | Compression | ZSTD |
-| Retention | Keep 7 daily, 4 weekly |
+| Retention | Keep 3 daily, 2 weekly |
 | Notes | `{{guestname}}` |
 
-The job was tested with **Run now** right after creating it. Because the backups live on the same array as the guests, they protect against bad changes and broken updates but not against losing the whole array. The original plan was to move them to the SAS RAID 10 array. That is on hold: one SAS drive is predicted to fail, and the array is now dedicated to media. Backups will get a better home when larger drives are added (see [storage.md](storage.md)).
+The job originally backed up every guest to `local`, which sits on the 94 GB Proxmox root filesystem. That filled the disk within a week and the job started failing. The full story and the fix are in [backup-disk-full.md](../runbook/backup-disk-full.md).
+
+What changed on 2026-10-06:
+- Backups go to the `media` storage, so they no longer share a disk with the Proxmox OS
+- The template (200) and the stopped lab VM (201) are left out of the nightly job. They don't change, so one manual backup of each is kept on `local`
+- Retention was cut down to fit the three guests that are still covered
+
+New guests are no longer picked up automatically. Anything worth protecting has to be ticked in the job's selection after it is built.
+
+The backups now live on a different array than the guests, which is better than before, but they share that array with the media library and nothing is copied off the server yet. They protect against a broken guest or a bad update, not against losing the server.
 
 ---
 
@@ -114,6 +123,7 @@ The job was tested with **Run now** right after creating it. Because the backups
 - **Use the node's Shutdown button, not Bulk Shutdown.** Bulk Shutdown only stops the guests and leaves the server powered on.
 - **Power down before pulling drives that are in an array.** Hot-swap is for replacing one failed drive in a redundant array, not for removing several members at once.
 - **Pi-hole goes down with the server.** Every device on VLAN 20 loses DNS while the T340 is off, so plan maintenance around that.
+- **Check where backups land and how much room is there.** The default `local` storage is the root filesystem. Multiply backup size by guests by retention before trusting a schedule, and look at the task log now and then, because a failing nightly job is easy to miss.
 - **A RAID 1 array is not a backup.** It survives a failed drive, not a bad config change or a deleted container. Scheduled backups are still needed.
 
 ---
@@ -123,7 +133,8 @@ The job was tested with **Run now** right after creating it. Because the backups
 - [x] Add the RAID 10 array to Proxmox as storage (`media` directory)
 - [ ] Replace the SAS drive that reports a predicted failure
 - [x] Set up a scheduled backup job (Datacenter > Backup) for all guests
-- [ ] Move backups off the RAID 1 array once larger drives are added
+- [x] Move backups off the RAID 1 array (now on the `media` storage)
+- [ ] Copy backups somewhere off the server
 - [x] Build a general-purpose lab VM and convert it to a template for fast cloning (see [ubuntu-template.md](ubuntu-template.md))
 - [ ] Connect iDRAC with a second Ethernet cable for remote power and console access
 - [ ] Put the server on a UPS

@@ -7,8 +7,8 @@ How the Dell PowerEdge T340's eight drive bays are laid out, how the SAS RAID 10
 ## Layout
 | Array | Drives | RAID Level | Usable | Proxmox Storage | Purpose |
 |---|---|---|---|---|---|
-| Boot / VM array | 2x 500GB SATA | RAID 1 | ~465GB | `local`, `local-lvm` | Proxmox OS, guest disks, backups |
-| Media array | 6x 300GB SAS, 10K rpm, 2.5" | RAID 10 | ~837GB | `media` (directory) | Jellyfin media library |
+| Boot / VM array | 2x 500GB SATA | RAID 1 | ~465GB | `local`, `local-lvm` | Proxmox OS, guest disks |
+| Media array | 6x 300GB SAS, 10K rpm, 2.5" | RAID 10 | ~837GB | `media` (directory) | Jellyfin media library, guest backups |
 
 Both arrays are hardware RAID on the Dell PERC H330. All eight bays are in use.
 
@@ -125,6 +125,8 @@ Steps:
 3. Disk `/dev/sdb`, filesystem `ext4`, name `media`, **Add Storage** checked
 
 The array is mounted on the host at `/mnt/pve/media`.
+
+On 2026-10-06 the **Backup** content type was enabled on `media` (**Datacenter > Storage > media > Edit > Content**) so the nightly backup job could be moved off the root disk. Proxmox keeps those files in `/mnt/pve/media/dump`, separate from the `library` folder that Jellyfin sees. See [backup-disk-full.md](../runbook/backup-disk-full.md).
 
 ---
 
