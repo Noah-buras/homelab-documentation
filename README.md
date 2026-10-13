@@ -79,7 +79,7 @@ Cisco SG300 (L2 Switch)
 | UniFi OS Server | VM on the T340 | Wireless controller for the U6+ ([docs](services/unifi.md)) | ✅ Running |
 | WireGuard | OPNsense | Remote VPN access | 📋 Planned |
 | Lab VMs | Proxmox guests on the T340 | Hands-on labbing ([template docs](services/ubuntu-template.md)) | ✅ Running |
-| Jellyfin | LXC container on the T340 | Media server, library on the SAS RAID 10 array ([docs](services/jellyfin.md)) | ✅ Running (VLAN 20) |
+| Jellyfin | LXC container on the T340 | Media server, library on the 4 TB RAID 1 array ([docs](services/jellyfin.md)) | ✅ Running (VLAN 20) |
 | Suricata | OPNsense | Intrusion detection | 📋 Future |
 ---
  
@@ -107,11 +107,18 @@ See the `/diagrams` folder for logical and physical network diagrams.
  
 ## Service Docs
 - [Proxmox VE](services/proxmox.md): T340 host setup, storage, and post-install steps
-- [Storage](services/storage.md): drive layout, building the SAS RAID 10, drive health checks, and the upgrade plan
+- [Storage](services/storage.md): drive layout, the media and backup arrays, drive health checks, and buying drives for the H330
 - [Pi-hole](services/pihole.md): container config, install, and troubleshooting
 - [Ubuntu Server Template](services/ubuntu-template.md): VM template, SSH key hardening, and cloning steps
 - [UniFi OS Server](services/unifi.md): self-hosted wireless controller, install, and AP management
 - [Jellyfin](services/jellyfin.md): media server container, library layout, and how media gets added
+
+---
+
+## Runbooks and Incidents
+- [Setup Order](runbook/setup-order.md): phase-by-phase build checklist
+- [Backup Job Filled the Root Disk](runbook/backup-disk-full.md): nightly backups failing with a full Proxmox root disk
+- [New Drives Rejected by the RAID Controller](runbook/netapp-520-byte-drives.md): reformatting NetApp 520-byte SAS drives so the PERC H330 would accept them
  
 ---
  

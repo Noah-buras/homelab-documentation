@@ -58,7 +58,7 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 - [ ] Power on Dell PowerEdge T340 and update firmware and BIOS
 - [x] Configure RAID 1 on the PERC H330 with the two 500GB SATA drives (Proxmox OS and guest disks)
 - [x] Seat all 6 SAS drives and build RAID 10 in one step, since the H330 can't expand it later (see services/storage.md)
-- [ ] Replace the SAS drive that reports a predicted failure
+- [x] Retire the SAS drive that reports a predicted failure (removed when the SAS array was rebuilt as a 4-drive backup array)
 - [x] Download the Proxmox VE ISO and flash to USB
 - [x] Install Proxmox VE on the Dell PowerEdge T340
 - [x] Assign static IP 192.168.20.11 (Trusted VLAN 20)
@@ -98,12 +98,13 @@ Note: OPNsense 26.1 uses Kea for DHCP. Keep Dnsmasq running until Kea is fully r
 Jellyfin was chosen over Plex because it is free and open source, needs no account, and keeps every feature available without a paid pass.
 
 - [x] Add media storage to the Dell PowerEdge T340 (SAS RAID 10, about 837 GB)
+- [x] Upgrade media storage to 2x 4TB SAS in RAID 1 and turn the SAS drives into a backup array (see services/storage.md)
 - [x] Deploy Jellyfin as an LXC container at 192.168.20.13 (see services/jellyfin.md)
 - [x] Create the Movies and Shows libraries and install the Jellyfin Enhanced plugin
 - [ ] Load the first media and confirm playback
 - [ ] Add Jellyfin firewall rules (VLAN 30 to 192.168.20.13, port 8096)
 - [ ] Test Jellyfin access from Media VLAN devices
-- [ ] Later: add larger drives for more media space (see services/storage.md)
+- [ ] Deploy Immich for photo backup on the `media` array
 ---
  
 ## Phase 9: Suricata (Intrusion Detection)

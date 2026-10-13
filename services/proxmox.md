@@ -23,22 +23,25 @@ The Dell PowerEdge T340 is the main server in the lab. It runs Proxmox VE, which
 | Array | Drives | RAID Level | Usable | Purpose | Status |
 |---|---|---|---|---|---|
 | Boot / VM array | 2x 500GB SATA | RAID 1 | ~465GB | Proxmox OS, container and VM disks | ✅ Online |
-| Media array | 6x 300GB SAS (10K) | RAID 10 | ~837GB | Jellyfin media library | ✅ Online (one drive flagged for replacement) |
+| Media array | 2x 4TB SAS (7.2K) | RAID 1 | ~3.6TB | Jellyfin media library, future photos | ✅ Online |
+| Backup array | 4x 300GB SAS (10K) | RAID 10 | ~558GB | Nightly guest backups | ✅ Online |
 
 Proxmox storage:
-- `local` (RAID 1): ISO images and container templates
-- `local-lvm` (RAID 1): container and VM disks
-- `media` (RAID 10): directory storage mounted at `/mnt/pve/media`, holding the Jellyfin library and guest backups
+- `local` (boot RAID 1): ISO images and container templates
+- `local-lvm` (boot RAID 1): container and VM disks
+- `media` (4TB RAID 1): directory storage mounted at `/mnt/pve/media`, holding the Jellyfin library
+- `backup` (SAS RAID 10): directory storage mounted at `/mnt/pve/backup`, holding guest backups only
 
-The full build steps, drive health checks, and upgrade plan are in [storage.md](storage.md).
+The full build steps, the 2026-10-12 rebuild, and drive health checks are in [storage.md](storage.md).
 
 ### Why hardware RAID instead of ZFS
 The PERC H330 would need to be crossflashed to IT mode to pass the drives through for ZFS. That is not officially supported by Dell and adds risk and complexity, so the lab uses the controller's hardware RAID.
 
-### RAID 10 notes
-- The SAS drives came in caddies that don't fit the T340's bays, so the array waited on compatible trays. With all 6 drives in the new trays, the array was built in one step.
-- The H330 cannot expand a RAID 10 after it is created, so the array had to be built with all 6 drives at once. It can still rebuild onto a replacement drive in the same bay.
-- One of the six drives reports a predicted failure and is due to be replaced (see [storage.md](storage.md)).
+### Array notes
+- The SAS drives were first built as a 6-drive RAID 10 for media. On 2026-10-12 that array was rebuilt as a 4-drive RAID 10 for backups, and a pair of 4 TB drives in RAID 1 took over media.
+- The H330 cannot expand an array after it is created, so changing an array's size means deleting it and building a new one. It can still rebuild onto a replacement drive in the same bay.
+- The SAS drive that reported a predicted failure was retired during the rebuild instead of being replaced.
+- The 4 TB drives arrived formatted with 520-byte sectors and had to be reformatted before the H330 would use them (see [netapp-520-byte-drives.md](../runbook/netapp-520-byte-drives.md)).
 - The spare PERC 6/i controller I was given is an older generation and is not compatible with the T340's backplane, so it is not used.
 
 ---
@@ -92,7 +95,7 @@ ID pattern: LXC containers use 100 and up, VMs and templates use 200 and up.
 | Location | Datacenter > Backup |
 | Schedule | Daily at 21:00 |
 | Selection | Guests 100 (pihole), 101 (jellyfin), and 202 (unifi) |
-| Storage | `media` (SAS RAID 10 array, files in `/mnt/pve/media/dump`) |
+| Storage | `backup` (SAS RAID 10 array, files in `/mnt/pve/backup/dump`) |
 | Mode | Snapshot (guests keep running during backup) |
 | Compression | ZSTD |
 | Retention | Keep 3 daily, 2 weekly |
@@ -101,13 +104,15 @@ ID pattern: LXC containers use 100 and up, VMs and templates use 200 and up.
 The job originally backed up every guest to `local`, which sits on the 94 GB Proxmox root filesystem. That filled the disk within a week and the job started failing. The full story and the fix are in [backup-disk-full.md](../runbook/backup-disk-full.md).
 
 What changed on 2026-10-06:
-- Backups go to the `media` storage, so they no longer share a disk with the Proxmox OS
+- Backups go to a separate array, so they no longer share a disk with the Proxmox OS
 - The template (200) and the stopped lab VM (201) are left out of the nightly job. They don't change, so one manual backup of each is kept on `local`
 - Retention was cut down to fit the three guests that are still covered
 
 New guests are no longer picked up automatically. Anything worth protecting has to be ticked in the job's selection after it is built.
 
-The backups now live on a different array than the guests, which is better than before, but they share that array with the media library and nothing is copied off the server yet. They protect against a broken guest or a bad update, not against losing the server.
+On 2026-10-12 the job moved again, from `media` to the new `backup` storage, so backups no longer share an array with the media library either. While the arrays were being rebuilt, a temporary copy was kept on `local` and the job was disabled.
+
+Nothing is copied off the server yet. The backups protect against a broken guest, a bad update, or a failed array, not against losing the whole server.
 
 ---
 
@@ -125,15 +130,17 @@ The backups now live on a different array than the guests, which is better than 
 - **Pi-hole goes down with the server.** Every device on VLAN 20 loses DNS while the T340 is off, so plan maintenance around that.
 - **Check where backups land and how much room is there.** The default `local` storage is the root filesystem. Multiply backup size by guests by retention before trusting a schedule, and look at the task log now and then, because a failing nightly job is easy to miss.
 - **A RAID 1 array is not a backup.** It survives a failed drive, not a bad config change or a deleted container. Scheduled backups are still needed.
+- **Device letters can move.** Drives set to Non-RAID are detected before the arrays and shift `/dev/sda` and the rest. Check `lsblk` before running anything destructive.
 
 ---
 
 ## Next Steps
 - [x] Buy compatible drive trays and build the 6-drive SAS RAID 10
 - [x] Add the RAID 10 array to Proxmox as storage (`media` directory)
-- [ ] Replace the SAS drive that reports a predicted failure
+- [x] Retire the SAS drive that reports a predicted failure (removed in the 2026-10-12 rebuild)
+- [x] Add 4 TB storage for media and give the SAS drives to backups
 - [x] Set up a scheduled backup job (Datacenter > Backup) for all guests
-- [x] Move backups off the RAID 1 array (now on the `media` storage)
+- [x] Move backups off the RAID 1 array (now on the dedicated `backup` storage)
 - [ ] Copy backups somewhere off the server
 - [x] Build a general-purpose lab VM and convert it to a template for fast cloning (see [ubuntu-template.md](ubuntu-template.md))
 - [ ] Connect iDRAC with a second Ethernet cable for remote power and console access

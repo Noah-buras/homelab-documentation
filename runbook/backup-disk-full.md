@@ -125,4 +125,5 @@ On older Proxmox versions the content type is labeled "VZDump backup file". On 9
 ## Next Steps
 - [ ] Confirm the next scheduled run finishes with OK
 - [ ] Point backup notifications at a real mailbox
-- [ ] Copy the `dump` folder to an external drive or another machine now and then, since the backups share an array with the media
+- [x] Move backups to their own array (done 2026-10-12, now on the `backup` storage, see [storage.md](../services/storage.md))
+- [ ] Copy the `dump` folder to an external drive or another machine now and then, since every array is still in the same server

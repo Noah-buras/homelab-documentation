@@ -1,6 +1,6 @@
 # Jellyfin
 
-Jellyfin is a free, open source media server. It runs as an LXC container on the Proxmox host and plays movies and shows stored on the SAS RAID 10 array.
+Jellyfin is a free, open source media server. It runs as an LXC container on the Proxmox host and plays movies and shows stored on the 4 TB RAID 1 array.
 
 Jellyfin was chosen over Plex because it needs no account and keeps every feature, including remote streaming and hardware transcoding, free. It fills the media server slot that was originally planned for Plex.
 
@@ -25,7 +25,7 @@ Jellyfin was chosen over Plex because it needs no account and keeps every featur
 | Media mount | Host `/mnt/pve/media/library` to container `/media` |
 | Web UI | http://192.168.20.13:8096 |
 
-The application lives on the RAID 1 array and the media lives on the RAID 10 array. Keeping them separate means the media can move to bigger drives later by copying the files and repointing one mount.
+The application lives on the boot RAID 1 array and the media lives on the 4 TB `media` array. Keeping them separate paid off on 2026-10-12: the media storage moved from the old SAS RAID 10 to new 4 TB drives, and because the new storage reused the `media` name and path, the container's mount needed no changes.
 
 Swap was left at the 512 MB default. Swap is slow overflow space on disk, and with 4 GB of RAM Jellyfin should not need it.
 
@@ -33,7 +33,7 @@ Swap was left at the 512 MB default. Swap is slow overflow space on disk, and wi
 
 ## Storage Layout
 ```
-RAID 10 array (/dev/sdb, ext4)
+4TB RAID 1 array (ext4)
    │  mounted on the Proxmox host
    ▼
 /mnt/pve/media
@@ -59,7 +59,7 @@ pct config 101
 
 The second command should include an `mp0:` line. The mount also appears under **container 101 > Resources**.
 
-See [storage.md](storage.md) for how the array was built.
+See [storage.md](storage.md) for how the array was built. The folders were recreated with the same commands after the 2026-10-12 rebuild.
 
 ---
 
@@ -126,7 +126,7 @@ The library is built from discs I own, ripped to MKV files with MakeMKV.
 | DVD | Any DVD drive (an old Mac's built-in drive works) | 4 to 8 GB |
 | Blu-ray | A Blu-ray drive (external USB drive on order) | 25 to 35 GB |
 
-At those sizes the 837 GB array holds roughly 25 Blu-rays or well over 100 DVDs. HandBrake can shrink Blu-ray rips to about a third of their size if space gets tight.
+At those sizes the 3.6 TB array holds roughly 100 Blu-rays or several hundred DVDs, though some of that space is set aside for photos. HandBrake can shrink Blu-ray rips to about a third of their size if space gets tight.
 
 4K UHD discs are skipped for now. They need specific drive firmware to rip, the files run 60 to 80 GB, and HDR video is hard for the server to convert on the fly.
 
@@ -145,8 +145,8 @@ Jellyfin sits on VLAN 20, so Trusted devices reach it with no firewall rule. The
 ---
 
 ## Backups
-- Container 101 is covered by the nightly 21:00 backup job, which writes to the `media` storage (see [proxmox.md](proxmox.md)). That protects the Jellyfin install, settings, and library metadata
-- The bind-mounted media folder is not part of that backup. The media itself is only protected by the RAID 10 array's redundancy, and the original discs are the fallback
+- Container 101 is covered by the nightly 21:00 backup job, which writes to the separate `backup` storage (see [proxmox.md](proxmox.md)). That protects the Jellyfin install, settings, and library metadata
+- The bind-mounted media folder is not part of that backup. The media itself is only protected by the RAID 1 mirror, and the original discs are the fallback
 
 ---
 
@@ -162,4 +162,4 @@ Jellyfin sits on VLAN 20, so Trusted devices reach it with no firewall rule. The
 - [ ] Add the Media VLAN firewall rule (VLAN 30 to 192.168.20.13, port 8096) and test from a TV
 - [ ] Install the Jellyfin app on the Media VLAN devices
 - [ ] Set up WireGuard for watching away from home (Phase 6)
-- [ ] Move the library to larger drives when they are added (see [storage.md](storage.md))
+- [x] Move the library to larger drives (4 TB RAID 1, see [storage.md](storage.md))
